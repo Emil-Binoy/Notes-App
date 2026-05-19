@@ -1,67 +1,62 @@
-import { MdEdit,MdDelete,MdDone  } from "react-icons/md";
+import { MdEdit, MdDelete, MdDone } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 
 const NoteItem = ({
-    note, editText, editId, updateNote, setEditId, setEditText, deleteNote, cancelEdit
+  note, editText, editId, updateNote, setEditId, setEditText, deleteNote, cancelEdit
 }) => {
+  const isEditing = editId === note.id;
+
   return (
-    <div>
-      
-        {
-            editId===note.id 
-            
-            ? 
-            
-            <div className="gap-2 flex flex-col lg:flex-row justify-between px-5 py-2 rounded-lg mx-5 my-2 border-2 border-amber-300 bg-amber-200 items-center">
-              <input  
-               value={editText}
-               onChange={(e)=>setEditText(e.target.value)}
-               className="w-full p-2 border-2 border-gray-400 rounded-md bg-white"
-              />
-              <div className="flex gap-2 w-full lg:w-auto">
-                <button 
-                  onClick={updateNote}
-                  className="flex items-center bg-purple-600 text-white px-3 p-1 rounded-md w-full lg:w-auto text-center justify-center"
-                >
-                  <MdDone />
-                  <h1>Save</h1>
-                </button>
-                <button 
-                  onClick={cancelEdit}
-                  className="flex items-center bg-gray-100 border-2 border-gray-300  px-3 p-1 rounded-md w-full lg:w-auto text-center justify-center"
-                >
-                  <IoMdClose />
-                  <h1>Cancel</h1>
-                </button>
-              </div>
-            </div>
-            
-            :
-            
-            <div className="flex flex-col lg:flex-row justify-between px-5 py-2 rounded-lg mx-5 my-2 border-2 border-gray-400 items-center">
-              <p>{note.text}</p>
-              <div className="flex gap-2 w-full lg:w-auto">
-                <button 
-                  onClick={()=>{
-                    setEditId(note.id)
-                    setEditText(note.text)
-                  }}
-                  className="border-2 border-blue-300 flex items-center text-blue-700 px-3 p-1 rounded-md w-full lg:w-auto text-center justify-center"
-                >
-                  <MdEdit />
-                  <h1>Edit</h1>
-                </button>
-                <button 
-                  onClick={()=>deleteNote(note.id)}
-                  className="border-2 border-red-300 flex items-center text-red-700 px-3 p-1 rounded-md w-full lg:w-auto text-center justify-center"
-                >
-                  <MdDelete />
-                  <h1>delete</h1>
-                </button>
-              </div>
-            </div>
-        }
-        
+    <div className="transition-all duration-200">
+      {isEditing ? (
+        <div className="gap-3 flex flex-col sm:flex-row justify-between p-4 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/20 shadow-sm backdrop-blur-sm items-center">
+          <input  
+            value={editText}
+            onChange={(e) => setEditText(e.target.value)}
+            className="w-full px-3 py-2 border border-amber-300 dark:border-amber-800 rounded-lg bg-white dark:bg-slate-900 shadow-inner focus:outline-none focus:ring-2 focus:ring-amber-400 text-slate-800 dark:text-slate-100 text-sm"
+            autoFocus
+          />
+          <div className="flex gap-2 w-full sm:w-auto shrink-0">
+            <button 
+              onClick={updateNote}
+              className="flex items-center justify-center gap-1 bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg w-full sm:w-auto text-sm font-medium shadow-sm active:scale-95 transition-all"
+            >
+              <MdDone className="text-base" />
+              <span>Save</span>
+            </button>
+            <button 
+              onClick={cancelEdit}
+              className="flex items-center justify-center gap-1 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 active:scale-95 transition-all border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-lg w-full sm:w-auto text-sm font-medium shadow-sm"
+            >
+              <IoMdClose className="text-base" />
+              <span>Cancel</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border border-slate-100 dark:border-slate-800/60 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md hover:-translate-y-0.5 dark:hover:shadow-slate-950/50 transition-all duration-200 gap-4">
+          <p className="text-slate-700 dark:text-slate-300 whitespace-pre-wrap break-all text-sm sm:text-base px-1">{note.text}</p>
+          <div className="flex gap-2 w-full sm:w-auto justify-end shrink-0 border-t border-slate-50 dark:border-slate-800/50 pt-3 sm:pt-0 sm:border-none">
+            <button 
+              onClick={() => {
+                setEditId(note.id)
+                setEditText(note.text)
+              }}
+              className="border border-slate-200 dark:border-slate-800 hover:border-blue-200 dark:hover:border-blue-900/50 hover:bg-blue-50/50 dark:hover:bg-blue-950/20 flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-1.5 rounded-lg w-full sm:w-auto text-xs font-medium transition-colors"
+            >
+              <MdEdit />
+              <span>Edit</span>
+            </button>
+            <button 
+              onClick={() => deleteNote(note.id)}
+              className="border border-slate-200 dark:border-slate-800 hover:border-red-200 dark:hover:border-red-900/50 hover:bg-red-50/50 dark:hover:bg-red-950/20 flex items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 px-3 py-1.5 rounded-lg w-full sm:w-auto text-xs font-medium transition-colors"
+            >
+              <MdDelete />
+              <span>Delete</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
