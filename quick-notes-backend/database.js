@@ -1,14 +1,16 @@
-const Database = require("better-sqlite3")
+const { Pool } = require("pg")
 
-const db = new Database("notes.db")
+const db = new Pool({
+
+    connectionString:
+    process.env.DATABASE_URL,
+
+    ssl:{
+        rejectUnauthorized:false
+    }
+
+})
 
 console.log("db connected")
 
-db.prepare(`
-CREATE TABLE IF NOT EXISTS notes(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    text TEXT
-)
-`).run()
-
-module.exports = db
+module.exports=db

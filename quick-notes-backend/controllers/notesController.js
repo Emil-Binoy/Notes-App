@@ -1,17 +1,15 @@
 const db=require("../database")
 
 
-const getNotes=(req,res)=>{
+const getNotes=async(req,res)=>{
 
     try{
 
-        const rows=db
-        .prepare(
+        const result=await db.query(
             "SELECT * FROM notes"
         )
-        .all()
 
-        res.json(rows)
+        res.json(result.rows)
 
     }
 
@@ -25,7 +23,7 @@ const getNotes=(req,res)=>{
 }
 
 
-const addNote=(req,res)=>{
+const addNote=async(req,res)=>{
 
     try{
 
@@ -40,18 +38,19 @@ const addNote=(req,res)=>{
 
         }
 
+        const result=
+        await db.query(
 
-        const result=db
-        .prepare(
-            "INSERT INTO notes(text) VALUES(?)"
+            "INSERT INTO notes(text) VALUES($1) RETURNING *",
+
+            [req.body.text]
+
         )
-        .run(req.body.text)
-
 
         res.status(201)
         .json({
 
-            id:result.lastInsertRowid,
+            note:result.rows[0],
 
             message:"note added"
 
@@ -69,16 +68,17 @@ const addNote=(req,res)=>{
 }
 
 
-const deleteNote=(req,res)=>{
+const deleteNote=async(req,res)=>{
 
     try{
 
-        const id=req.params.id
+        await db.query(
 
-        db.prepare(
-            "DELETE FROM notes WHERE id=?"
+            "DELETE FROM notes WHERE id=$1",
+
+            [req.params.id]
+
         )
-        .run(id)
 
         res.json({
 
@@ -98,11 +98,9 @@ const deleteNote=(req,res)=>{
 }
 
 
-const updateNote=(req,res)=>{
+const updateNote=async(req,res)=>{
 
     try{
-
-        const id=req.params.id
 
         const text=req.body.text
 
@@ -117,12 +115,13 @@ const updateNote=(req,res)=>{
 
         }
 
+        await db.query(
 
-        db.prepare(
-            "UPDATE notes SET text=? WHERE id=?"
+            "UPDATE notes SET text=$1 WHERE id=$2",
+
+            [text,req.params.id]
+
         )
-        .run(text,id)
-
 
         res.json({
 
