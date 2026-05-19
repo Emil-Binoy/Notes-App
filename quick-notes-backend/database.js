@@ -1,19 +1,14 @@
-const sqlite3 = require('sqlite3').verbose()
+const Database = require("better-sqlite3")
 
-const db = new sqlite3.Database('./notes.db', (err)=>{
-    if(err){
-        console.log(err)
-    }
-    else{
-        console.log("db connected")
-    }
-})
+const db = new Database("notes.db")
 
-db.run(`
+console.log("db connected")
+
+db.prepare(`
 CREATE TABLE IF NOT EXISTS notes(
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-text TEXT
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    text TEXT
 )
-`)
+`).run()
 
-module.exports=db;
+module.exports = db

@@ -1,84 +1,150 @@
 const db=require("../database")
 
+
 const getNotes=(req,res)=>{
-    db.all(
-        "SELECT * FROM notes",
-        [],
-        (err,rows)=>{
-            if(err){
-                return res.status(500).json(err)
-            }
-            res.json(rows)
-        }
-    )
+
+    try{
+
+        const rows=db
+        .prepare(
+            "SELECT * FROM notes"
+        )
+        .all()
+
+        res.json(rows)
+
+    }
+
+    catch(err){
+
+        res.status(500)
+        .json(err)
+
+    }
+
 }
+
 
 const addNote=(req,res)=>{
 
-    if(!req.body.text){
-        return res.status(400).json({
-            messsage:"string is empty"
+    try{
+
+        if(!req.body.text){
+
+            return res.status(400)
+            .json({
+
+                message:"string is empty"
+
+            })
+
+        }
+
+
+        const result=db
+        .prepare(
+            "INSERT INTO notes(text) VALUES(?)"
+        )
+        .run(req.body.text)
+
+
+        res.status(201)
+        .json({
+
+            id:result.lastInsertRowid,
+
+            message:"note added"
+
         })
+
     }
 
-    db.run(
-        "INSERT INTO notes(text) VALUES(?)",
-        [req.body.text],
+    catch(err){
 
-        function(err){
-            if(err){
-                return res.status(500).json(err)
-            }
+        res.status(500)
+        .json(err)
 
-            res.status(201).json({
-                id:this.lastID,
-                messsage:"note added"
-            })
-        }
-    )
+    }
+
 }
+
 
 const deleteNote=(req,res)=>{
-    const id = req.params.id
 
-    db.run(
-        "DELETE FROM notes WHERE id = ?",
+    try{
 
-        [id],
+        const id=req.params.id
 
-        function(err){
-            if(err){
-                return res.status(500).json(err)
-            }
+        db.prepare(
+            "DELETE FROM notes WHERE id=?"
+        )
+        .run(id)
 
-            res.json({
-                messsage:"note deleted"
-            })
-        }
-    )
-}
+        res.json({
 
-const updateNote=(req,res)=>{
-    const id = req.params.id
-    const text=req.body.text
-    if(!text){
-        return res.status(400).json({
-            messsage:"text required"
+            message:"note deleted"
+
         })
+
     }
 
-    db.run(
-        'UPDATE notes SET text=? WHERE id=?',
-        [text,id],
-        function(err){
-            if(err){
-                return res.status(500).json(err)
-            }
-            res.json({
-                messsage:"note updated"
-            })
-        }
-    )
+    catch(err){
+
+        res.status(500)
+        .json(err)
+
+    }
+
 }
 
-module.exports={getNotes,addNote,deleteNote,updateNote}
+
+const updateNote=(req,res)=>{
+
+    try{
+
+        const id=req.params.id
+
+        const text=req.body.text
+
+        if(!text){
+
+            return res.status(400)
+            .json({
+
+                message:"text required"
+
+            })
+
+        }
+
+
+        db.prepare(
+            "UPDATE notes SET text=? WHERE id=?"
+        )
+        .run(text,id)
+
+
+        res.json({
+
+            message:"note updated"
+
+        })
+
+    }
+
+    catch(err){
+
+        res.status(500)
+        .json(err)
+
+    }
+
+}
+
+
+module.exports={
+    getNotes,
+    addNote,
+    deleteNote,
+    updateNote
+}
