@@ -8,6 +8,7 @@ import { IoSunnySharp, IoMoonSharp } from "react-icons/io5";
 
 import EmptyState from './components/ui/EmptyState'
 import useNotes from './hooks/useNotes';
+import Signup from './pages/Signup';
 
 const App = () => {
   const { 
@@ -36,7 +37,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased pb-12 transition-colors duration-200">
-      
+      <Signup/>
       <header className="sticky top-0 z-50 bg-white/80 border-b border-slate-100 dark:bg-slate-900/80 dark:border-slate-800 backdrop-blur-md px-6 py-4 transition-colors duration-200">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5 text-purple-600 dark:text-purple-400">

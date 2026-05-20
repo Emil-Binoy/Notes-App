@@ -6,7 +6,8 @@ const getNotes=async(req,res)=>{
     try{
 
         const result=await db.query(
-            "SELECT * FROM notes"
+            "SELECT * FROM notes WHERE user_id=$1",
+            [req.user.id]
         )
 
         res.json(result.rows)
@@ -31,9 +32,7 @@ const addNote=async(req,res)=>{
 
             return res.status(400)
             .json({
-
                 message:"string is empty"
-
             })
 
         }
@@ -41,20 +40,26 @@ const addNote=async(req,res)=>{
         const result=
         await db.query(
 
-            "INSERT INTO notes(text) VALUES($1) RETURNING *",
+            `
+            INSERT INTO notes(
+            text,
+            user_id
+            )
 
-            [req.body.text]
+            VALUES($1,$2)
+
+            RETURNING *
+            `,
+
+            [
+                req.body.text,
+                req.user.id
+            ]
 
         )
 
         res.status(201)
-        .json({
-
-            note:result.rows[0],
-
-            message:"note added"
-
-        })
+        .json(result.rows[0])
 
     }
 
@@ -74,9 +79,9 @@ const deleteNote=async(req,res)=>{
 
         await db.query(
 
-            "DELETE FROM notes WHERE id=$1",
+            "DELETE FROM notes WHERE id=$1 AND user_id=$2",
 
-            [req.params.id]
+            [req.params.id, req.user.id]
 
         )
 
@@ -117,9 +122,9 @@ const updateNote=async(req,res)=>{
 
         await db.query(
 
-            "UPDATE notes SET text=$1 WHERE id=$2",
+            "UPDATE notes SET text=$1 WHERE id=$2 AND user_id=$3",
 
-            [text,req.params.id]
+            [text,req.params.id,req.user.id]
 
         )
 
