@@ -21,7 +21,13 @@ const useNotes=()=>{
     const [error,setError] = useState("")
 
     useEffect(()=>{
-        loadNotes()
+        const token=localStorage.getItem("token")
+
+        if(token){
+
+            loadNotes()
+
+        }
     },[])
 
     const loadNotes = ()=>{

@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { LuUser, LuMail, LuLock, LuArrowRight } from "react-icons/lu";
+import { Link,useNavigate  } from "react-router-dom"
 
 const Signup = () => {
+    const navigate = useNavigate()
 
     const [username,setUsername]=useState('')
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
 
-    const handleSignup=async()=>{
+    const handleSignup=async(e)=>{
+      e.preventDefault();
         const response=await fetch(`${import.meta.env.VITE_API_URL}/auth/signup`,
             {
                 method:"POST",
@@ -24,10 +27,12 @@ const Signup = () => {
 
         const data = await response.json()
         console.log(data)
+
+        navigate("/login")
     }
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 p-8 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none transition-colors duration-200">
+    <div className="w-full mt-5 max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 p-8 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none transition-colors duration-200">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
           Create an Account
@@ -98,6 +103,17 @@ const Signup = () => {
           <span>Sign Up</span>
           <LuArrowRight className="text-base group-hover:translate-x-0.5 transition-transform" />
         </button>
+        <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
+            Already have an account?{" "}
+            
+            <Link
+                to="/login"
+                className="text-purple-600 dark:text-purple-400 hover:underline font-medium"
+            >
+                Sign in
+            </Link>
+
+        </div>
       </form>
     </div>
   );

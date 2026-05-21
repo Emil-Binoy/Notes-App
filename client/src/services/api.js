@@ -1,14 +1,19 @@
 const BASE_URL=import.meta.env.VITE_API_URL
 
 export const getNotes=()=>{
-    return fetch(`${BASE_URL}/notes`)
+    return fetch(`${BASE_URL}/notes`,{
+        headers:{
+            Authorization:localStorage.getItem('token')
+        }
+    })
 }
 
 export const addNote=(text)=>{
     return fetch(`${BASE_URL}/notes`,{
         method:'POST',
         headers:{
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            Authorization:localStorage.getItem('token')
         },
         body:JSON.stringify({
             text
@@ -18,7 +23,10 @@ export const addNote=(text)=>{
 
 export const deleteNote=(id)=>{
     return fetch(`${BASE_URL}/notes/${id}`,{
-      method:'DELETE'
+      method:'DELETE',
+      headers:{
+        Authorization:localStorage.getItem('token')
+      }
     })
 }
 
@@ -26,7 +34,8 @@ export const updateNote=(id,text)=>{
     return fetch(`${BASE_URL}/notes/${id}`,{
       method:'PUT',
       headers:{
-        'Content-Type':'application/json'
+        'Content-Type':'application/json',
+        Authorization:localStorage.getItem('token')
       },
       body:JSON.stringify({
         text
