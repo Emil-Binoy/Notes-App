@@ -19,13 +19,26 @@ const signup = async (req,res) => {
 
             [username,email,hashedPassword]
         )
+        const newUser = result.rows[0];
+        const token= jwt.sign(
+            {id:newUser.id},
+            process.env.JWT_SECRET,
+            {expiresIn:"7d"}
+        )
+
         res.status(201).json({
-            user:result.rows[0],
+            token,
+            user:{
+                id:newUser.id,
+                username:newUser.username,
+                email:newUser.email
+            },
             message:"signup successful"
         })
         
-    } catch (err) {
-        res.status(500).json(err)
+    } catch (error) {
+        console.error("Signup Error:", error);
+        res.status(500).json({ message: error.message });
     }
 }
 

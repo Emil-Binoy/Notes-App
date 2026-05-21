@@ -1,35 +1,48 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { LuUser, LuMail, LuLock, LuArrowRight } from "react-icons/lu";
-import { Link,useNavigate  } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
 
-    const [username,setUsername]=useState('')
-    const [email,setEmail]=useState('')
-    const [password,setPassword]=useState('')
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const handleSignup=async(e)=>{
-      e.preventDefault();
-        const response=await fetch(`${import.meta.env.VITE_API_URL}/auth/signup`,
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                    username,
-                    email,
-                    password
-                })
-            }
-        )
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/auth/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            email,
+            password,
+          }),
+        },
+      );
 
-        const data = await response.json()
-        console.log(data)
+      const data = await response.json();
+      if(!response.ok){
+        toast.error(data.message||"failed to sign up");
+        return;
+      }
 
-        navigate("/login")
+      localStorage.setItem('token', data.token);
+
+      toast.success("Account created! Welcome.");
+      navigate("/");
+    } catch (error) {
+        toast.error("Cannot connect to server.");
+        console.error(error);
     }
+  };
 
   return (
     <div className="w-full mt-5 max-w-md mx-auto bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/80 p-8 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none transition-colors duration-200">
@@ -53,7 +66,7 @@ const Signup = () => {
             <input
               type="text"
               value={username}
-              onChange={(e)=>setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               placeholder="johndoe"
               className="w-full pl-11 pr-4 h-11 bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-purple-400 dark:focus:border-purple-500 focus:ring-4 focus:ring-purple-100 dark:focus:ring-purple-950/50 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600"
             />
@@ -70,7 +83,7 @@ const Signup = () => {
             <input
               type="email"
               value={email}
-              onChange={(e)=>setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               className="w-full pl-11 pr-4 h-11 bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-purple-400 dark:focus:border-purple-500 focus:ring-4 focus:ring-purple-100 dark:focus:ring-purple-950/50 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600"
             />
@@ -87,7 +100,7 @@ const Signup = () => {
             <input
               type="password"
               value={password}
-              onChange={(e)=>setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               className="w-full pl-11 pr-4 h-11 bg-slate-50/50 dark:bg-slate-950/40 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:border-purple-400 dark:focus:border-purple-500 focus:ring-4 focus:ring-purple-100 dark:focus:ring-purple-950/50 transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600"
             />
@@ -104,15 +117,13 @@ const Signup = () => {
           <LuArrowRight className="text-base group-hover:translate-x-0.5 transition-transform" />
         </button>
         <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-            Already have an account?{" "}
-            
-            <Link
-                to="/login"
-                className="text-purple-600 dark:text-purple-400 hover:underline font-medium"
-            >
-                Sign in
-            </Link>
-
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-purple-600 dark:text-purple-400 hover:underline font-medium"
+          >
+            Sign in
+          </Link>
         </div>
       </form>
     </div>
