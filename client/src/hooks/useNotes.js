@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react"
 import toast from "react-hot-toast"
-import faah from "../assets/faahh.mp3"
+import { errorSound } from "../utils/audio";
 import { 
   getNotes,
   addNote as addNoteApi,
@@ -8,7 +8,6 @@ import {
   updateNote as updateNoteApi
 } from "../services/api"
 
-const sound=new Audio(faah)
 
 const useNotes=()=>{
     const [notes, setNotes]=useState([])
@@ -48,7 +47,7 @@ const useNotes=()=>{
 
     const addNote =()=>{
         if(!text.trim()) {
-        sound.play()
+        errorSound.play();
         toast.error("Empty note not allowed 😤")
         return
         }
