@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { LuNotebookPen } from "react-icons/lu";
 import { IoSunnySharp, IoMoonSharp } from "react-icons/io5";
+import logo from "../../assets/logo.png"
 
 const Header = () => {
   const [isDark, setIsDark] = useState(() => {
@@ -22,15 +22,14 @@ const Header = () => {
   }, [isDark]);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 border-b border-slate-100 dark:bg-slate-900/80 dark:border-slate-800 backdrop-blur-md px-6 py-4 transition-colors duration-200">
+    <header className="sticky top-0 z-50 bg-white/80 border-b border-slate-100 dark:bg-slate-900/80 dark:border-slate-800 backdrop-blur-md px-6 py-2 transition-colors duration-200">
       <div className="max-w-4xl mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-2.5 text-purple-600 dark:text-purple-400">
-          <div className="bg-purple-50 dark:bg-purple-950/50 p-2 rounded-xl">
-            <LuNotebookPen size={20} className="stroke-[2.5]" />
-          </div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-            Notes<span className="text-purple-600 dark:text-purple-400">.</span>
-          </h1>
+        <div className="">
+          <img 
+            src={logo} 
+            alt="notes logo"  
+            className='h-15 drop-shadow-xl/40'  
+          />
         </div>
         
         <button 
